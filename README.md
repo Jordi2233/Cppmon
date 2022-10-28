@@ -6,6 +6,11 @@ The second is cppmon, which allows you to run a script in the background that wa
 
 ##Instalation
 ```
-cd Downloads 
-https://github.com/Jordi2233/Linux_Comands.git
+mkdir ~/bin
+cd Downloads
+git clone https://github.com/Jordi2233/Linux_Comands.git
+cd Linux_Comands/
+cp -r * ~/bin/
+cp ~/.bash_profile ~/.bash_profile.copy
+echo 'export PATH=$PATH":$HOME/bin' >> ~/.bash_profile
 ```
