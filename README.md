@@ -5,6 +5,7 @@ The first is files_create, which allows you to choose between Python and C ++ fi
 The second is cppmon, which allows you to run a script in the background that waits for C ++ files to change and automatically compiles and runs it in the console. Takes one parameter that is the full file name.
 
 ##Instalation
-
-`cd Downloads \n
-https://github.com/Jordi2233/Linux_Comands.git`
+```
+cd Downloads 
+https://github.com/Jordi2233/Linux_Comands.git
+```
