@@ -25,4 +25,4 @@ that will start wainting for changes on filename.cpp file
 ```
 files_create py 10 
 ```
-that will create 10 files "Zad1-10.py"
+that will create 10 files "Zad1.py Zad2.py ... Zad10.py"
