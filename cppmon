@@ -23,3 +23,10 @@ def cppmon(file_name):
 
 file = sys.argv[1]
 cppmon(file)
+
+# TODO:
+#     1. separate processes
+#     2. Add rs command that restart the script
+#     3. Add q command that exit the script
+#     4. Add help option
+#     5. Add compile timer
