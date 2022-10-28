@@ -6,5 +6,5 @@ The second is cppmon, which allows you to run a script in the background that wa
 
 ##Instalation
 
-(`cd Downloads
-https://github.com/Jordi2233/Linux_Comands.git`)
+`cd Downloads \n
+https://github.com/Jordi2233/Linux_Comands.git`
