@@ -16,9 +16,13 @@ echo 'export PATH=$PATH":$HOME/bin"' >> ~/.bash_profile
 ```
 ### Cppmon usage
 ```
-cppmon filename.cpp #that will start wainting for changes on filename.cpp file
+cppmon filename.cpp 
 ```
+that will start wainting for changes on filename.cpp file
+
+
 ### files_create usage
 ```
-files_create py 10 #that will create 10 files "Zad1-10.py"
+files_create py 10 
 ```
+that will create 10 files "Zad1-10.py"
