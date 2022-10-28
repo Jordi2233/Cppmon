@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+import os, time, sys
+os.system('clear')
+
+
+def cppmon(file_name):
+
+    print(f"{file} is open.\nWaiting for changes!")
+    short_file = ''
+
+    for i in range(len(file)):
+        if file[i] == ".":
+            short_file = file[:i]
+
+    changes =  {file:os.path.getmtime(file)}
+    while True:
+            time.sleep(0.01)
+            if changes.get(file) < os.path.getmtime(file):
+                res = os.system(f"g++ -o {short_file} {file}")
+                if res == 0:
+                    os.system(f"./{short_file}")
+                changes[file] = os.path.getmtime(file)
+
+file = sys.argv[1]
+cppmon(file)
