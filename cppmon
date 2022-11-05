@@ -2,7 +2,6 @@
 import os, time, sys
 os.system('clear')
 
-
 def cppmon(file_name):
 
     print(f"{file} is open.\nWaiting for changes!")
@@ -21,8 +20,14 @@ def cppmon(file_name):
                     os.system(f"./{short_file}")
                 changes[file] = os.path.getmtime(file)
 
+
 file = sys.argv[1]
-cppmon(file)
+
+def main():
+    cppmon(file)
+
+if __name__ == "__main__":
+    main()
 
 # TODO:
 #     1. separate processes

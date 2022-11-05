@@ -9,7 +9,7 @@ def create_cpp(x):
             f.write(command)
 
 def create_py(x):
-    command = "import os\nos.system('clear')"
+    command = "import os\n\ndef main():\n\tos.system('clear')\n\nif __name__ == '__main__':\n\tmain()"
 
     for x in range(x):
         with open(f"Zad{x+1}.py", "w") as f:
@@ -17,11 +17,14 @@ def create_py(x):
 
 type_of_file = sys.argv[1]
 num_of_files = int(sys.argv[2])
+def main():
+    if type_of_file == "cpp":
+        create_cpp(num_of_files)
+    elif type_of_file == "py":
+        create_py(num_of_files)
+    else:
+        print("Wrong file type\n")
 
-if type_of_file == "cpp":
-    create_cpp(num_of_files)
-elif type_of_file == "py":
-    create_py(num_of_files)
-else:
-    print("Wrong file type\n")
+if __name__ == "__main__":
+    main()
 
