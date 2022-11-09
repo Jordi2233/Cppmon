@@ -9,7 +9,7 @@ def create_cpp(x):
             f.write(command)
 
 def create_py(x):
-    command = "import os\n\ndef main():\n\tos.system('clear')\n\nif __name__ == '__main__':\n\tmain()"
+    command = "import os\n\ndef main():\n   os.system('clear')\n\nif __name__ == '__main__':\n  main()"
 
     for x in range(x):
         with open(f"Zad{x+1}.py", "w") as f:
