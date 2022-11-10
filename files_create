@@ -2,14 +2,14 @@
 import sys
 
 def create_cpp(x):
-    command = '#include <bits/stdc++.h> \nusing namespace std; \nint main() { \nsystem("clear"); \nreturn 0;'
+    command = '#include <bits/stdc++.h>\nint main() { \nsystem("clear"); \nreturn 0;'
 
     for x in range(x):
         with open(f"Zad{x+1}.cpp", "w") as f:
             f.write(command)
 
 def create_py(x):
-    command = "import os\n\ndef main():\n   os.system('clear')\n\nif __name__ == '__main__':\n  main()"
+    command = "import os\n\ndef main():\n    os.system('clear')\n\nif __name__ == '__main__':\n    main()"
 
     for x in range(x):
         with open(f"Zad{x+1}.py", "w") as f:
