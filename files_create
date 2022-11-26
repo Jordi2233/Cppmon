@@ -1,30 +1,36 @@
 #!/usr/bin/env python3
 import sys
 
-def create_cpp(x):
-    command = '#include <bits/stdc++.h>\nint main() { \nsystem("clear"); \nreturn 0;'
 
-    for x in range(x):
-        with open(f"Zad{x+1}.cpp", "w") as f:
+def create_cpp(num_of_files, name_of_files):
+    command = '#include <iostream>\n\nint main() {\n\tsystem("clear");\n\n\treturn 0;\n}'
+
+    for num_of_files in range(num_of_files):
+        with open(f"{name_of_files}{num_of_files+1}.cpp", "w") as f:
             f.write(command)
 
-def create_py(x):
-    command = "import os\n\ndef main():\n    os.system('clear')\n\nif __name__ == '__main__':\n    main()"
+
+def create_py(x, name_of_files):
+    command = "#!/usr/bin/env python3\nimport os\n\ndef main():\n   os.system('clear')\n\nif __name__ == '__main__':\n  main()"
 
     for x in range(x):
-        with open(f"Zad{x+1}.py", "w") as f:
+        with open(f"{name_of_files}{x+1}.py", "w") as f:
             f.write(command)
 
-type_of_file = sys.argv[1]
+
+type_of_files = sys.argv[1]
 num_of_files = int(sys.argv[2])
+name_of_files = sys.argv[3]
+
+
 def main():
-    if type_of_file == "cpp":
-        create_cpp(num_of_files)
-    elif type_of_file == "py":
-        create_py(num_of_files)
+    if type_of_files == "cpp":
+        create_cpp(num_of_files, name_of_files)
+    elif type_of_files == "py":
+        create_py(num_of_files, name_of_files)
     else:
         print("Wrong file type\n")
 
+
 if __name__ == "__main__":
     main()
-
