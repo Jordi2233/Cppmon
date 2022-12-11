@@ -15,6 +15,7 @@ cd Linux_Commands/
 cp -r * ~/bin/
 cp ~/.bash_profile ~/.bash_profile.copy
 echo 'export PATH=$PATH":$HOME/bin"' >> ~/.bash_profile
+source ~/.bash_profile
 ```
 
 ### Cppmon usage
