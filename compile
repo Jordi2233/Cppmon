@@ -1,0 +1,6 @@
+#!/bin/bash
+
+
+read -p "Enter name of file to compile: " name
+
+g++ -o ${name} ${name}".cpp" && ./${name}

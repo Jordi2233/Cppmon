@@ -1,0 +1,10 @@
+#!/bin/bash
+# wmctrl -s 5
+# sleep 0.5
+# (terminator &)
+# sleep 1
+# xdotool type "sudo dnf upgrade -y && sudo dnf update -y" &&
+# xdotool key Return
+# exit 0
+
+wmctrl -s 7 && (xfce4-terminal &) &&  sleep 1 && xdotool type "sudo pacman -Syyu && paru -Sua" && xdotool key Return

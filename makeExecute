@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+
+# clear
+
+CURRENT_PATH="$(pwd)/*"
+
+SURFFIX=("sh" "py")
+# echo "$CURRENT_PATH"
+
+for f in ${CURRENT_PATH}
+do
+    if [[ -f "${f}" && ! -x "${f}" && "${f##*.}" == "${SURFFIX[0]}" || "${f##*.}" == "${SURFFIX[1]}" ]]
+    then
+        FILE_NAME=$( basename "${f}")
+        chmod +x "${FILE_NAME}" && echo "Made ${FILE_NAME} executable"
+    fi
+done

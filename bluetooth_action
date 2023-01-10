@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+status=$(systemctl status bluetooth.service | grep Active | awk '{print $2}')
+
+
+if [[ $status == "active" ]]; then
+    systemctl stop bluetooth.service
+    notify-send "Bluetooth" "Bluetooth is now off"
+else
+    systemctl start bluetooth.service
+    notify-send "Bluetooth" "Bluetooth is now on"
+fi

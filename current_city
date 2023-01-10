@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+
+CITY=$1
+
+file=$(find $HOME/.config/eww -name "getWeather.sh")
+
+cp "$file" "${file}.bak"
+
+sed -i "s/CITY=.*/CITY=\"$CITY\"/" "$file"
+
+notify-send "Eww" "Weather set to $CITY"

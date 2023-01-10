@@ -1,0 +1,20 @@
+#!/bin/bash
+# Open vim in home folder
+(konsole &) &&
+sleep 0.5 &&
+wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz &&
+xdotool type vim &&
+xdotool key Return &&
+xdotool key 0xffe3+t #pres ctrl+t to toggle NERDtree
+
+# Open konsole next to vim and resize it
+xdotool key 0xffe3+0xffe1+9 && #pres ctrl+shift+9 to open new tab
+
+# Press 8 time ctrl+shift+] to resize konsole tab
+for i in {0..7}
+do        
+xdotool key 0xffe3+0xffe1+0x005b
+done &&
+# 0xffe3+0xffe1+ Foocus on tree
+xdotool key 0xffe3+0xffe1+0xff51 &&
+exit 0

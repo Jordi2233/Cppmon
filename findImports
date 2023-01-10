@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+# pyPath="/home/jordi/Programming/Computer_Science/Python_Uni/Lista"
+
+pyPath=$1
+
+find "${pyPath}" -print -name "*.py" | grep -v "node*\|.git" | xargs grep --color -bne "^import\s\|^from\s" 2> /dev/null| cut -d" " -f2-10 | sort | uniq 
+# find "${pyPath}" -print -name "*.py" | grep -Ev "node*|.git" | xargs grep --color -Ebn "^import\s|^from\s" 2> /dev/null| cut -d" " -f2-10 | grep -Ev "as|import" |sort | uniq 
+
+# TODO:
+# Aftet learn awk rebild the code to work finally

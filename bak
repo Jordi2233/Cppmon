@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+#make backup directory or file
+
+if [ -d "$1" ]; then
+    echo "Directory exists"
+    tar -czvf "$1".tar.gz "$1"
+    echo "Directory compressed"
+    mv "$1".tar.gz /home/jordi/backup
+    echo "Directory moved to backup"
+elif [ -f "$1" ]; then
+    echo "File exists"
+    tar -czvf "$1".tar.gz "$1"
+    echo "File compressed"
+    mv "$1".tar.gz /home/jordi/backup
+    echo "File moved to backup"
+else
+    echo "File or directory does not exist"
+fi

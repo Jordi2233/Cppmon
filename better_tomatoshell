@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+
+(bspc rule -a tabbed desktop=9 -o state=pseudo_tiled rectangle="45" && tabbed -n "term" alacritty -t "term" --embed &)
+bspc desktop --focus ^9 &&
+sleep 0.3 && xdotool type "tomatoshell -f -n 4" && xdotool key Return

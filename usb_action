@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# Find all unmounted USB devices
+
+usb_name=$(lsblk -io NAME | grep -Ei "sd.[1-9]" | sed -e 's/`-//')
+
+
+
+for usb in $usb_name; do
+    mount_point=$(lsblk -io NAME,MOUNTPOINT | grep -Ei "$usb" | cut -d" " -f7)
+    if [[ $1 == "mount" ]]
+    then
+        if [ -z "$mount_point" ]; then
+            notify-send "USB" "$usb is not mounted"
+            notify-send "USB" "Creating mount point"
+            sudo mkdir /run/media/"$usb"
+            notify-send "USB" "Mounting $usb"
+            sudo mount /dev/"$usb" /run/media/"$usb"
+        else
+            notify-send "USB" "$usb is already mounted $mount_point"
+        fi
+    elif [[ $1 == "unmount" ]]
+    then
+        if [ -z "$mount_point" ]; then
+            notify-send "USB" "$usb is not mounted"
+        else
+            notify-send "USB" "Unmounting $usb"
+            sudo umount /dev/"$usb"
+            notify-send "USB" "Removing $usb mount point"
+            sudo rm -rf /run/media/"$usb"
+        fi
+    else
+        notify-send "USB" "Invalid argument"
+    fi
+    sleep 2
+done
+

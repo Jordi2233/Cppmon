@@ -1,35 +1,38 @@
 #!/usr/bin/env python3
-import sys
+from sys import argv
+from os import system
 
-
-def create_cpp(num_of_files, name_of_files):
-    command = '#include <iostream>\n\nint main() {\n\tsystem("clear");\n\n\treturn 0;\n}'
+def create_files(num_of_files, name_of_files, type):
+    if type == "py":
+        command = "#!/usr/bin/env python3\nimport os\n\ndef main():\n    os.em('clear')\n\nif __name__ == '__main__':\n    main()"
+    elif type == "cpp":
+        command = '#include <iostream>\n\nint main() {\n\tem("clear");\n\n\treturn 0;\n}'
+    elif type == "sh":
+        command = "#!/usr/bin/env bash\n\nclear"
+    else:
+        print("Wrong file type\n")
 
     for num_of_files in range(num_of_files):
-        with open(f"{name_of_files}{num_of_files+1}.cpp", "w") as f:
+        with open(f"{name_of_files}{num_of_files+1}.{type}", "w") as f:
             f.write(command)
 
 
-def create_py(x, name_of_files):
-    command = "#!/usr/bin/env python3\nimport os\n\ndef main():\n   os.system('clear')\n\nif __name__ == '__main__':\n  main()"
-
-    for x in range(x):
-        with open(f"{name_of_files}{x+1}.py", "w") as f:
-            f.write(command)
-
-
-type_of_files = sys.argv[1]
-num_of_files = int(sys.argv[2])
-name_of_files = sys.argv[3]
+type_of_files = argv[1]
+num_of_files = int(argv[2])
+name_of_files = argv[3]
 
 
 def main():
-    if type_of_files == "cpp":
-        create_cpp(num_of_files, name_of_files)
-    elif type_of_files == "py":
-        create_py(num_of_files, name_of_files)
-    else:
-        print("Wrong file type\n")
+    try:
+        create_files(num_of_files, name_of_files, type_of_files)
+        if num_of_files == 0:
+            print(f"{num_of_files} file created")
+        else:
+            print(f"{num_of_files} file created:")
+            system(f"for file in $(ls | grep {type_of_files});do echo $file created; done")
+    except UnboundLocalError:
+        print("Wrong arguments\n")
+
 
 
 if __name__ == "__main__":

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+arg=$1
+
+a=$(systemctl status "${arg}".service | grep Active | cut -d":" -f2 | cut -d " " -f2)
+
+if [[ "$a" == "inactive" ]]; then
+    echo "${arg} is dead, let's bring him back" && sudo systemctl start "${arg}".service && systemctl status "${arg}".service | grep Active
+else
+    echo "${arg} is already alive. Have fun at work!"
+fi

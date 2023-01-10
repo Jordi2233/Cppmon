@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+(terminator &)
+
+
+skip_left() {
+    for i in {1 2}
+    do
+        xdotool key Alt_L+Left
+    done
+}
+skip_right() {
+    for i in {1 2}
+    do
+        xdotool key Alt_L+Right
+    done
+}
+
+skip_up() {
+    for i in {1..3}
+    do
+        xdotool key Alt_L+Up
+    done
+}
+skip_down() {
+    for i in {1..3}
+    do
+        xdotool key Alt_L+Down
+    done
+}
+
+cmatrix_init() {
+    xdotool type "cmatrix"
+    xdotool key Return
+}
+
+sleep 0.5
+
+for i in 1 2
+do
+    sleep 0.1
+    xdotool key Control_L+Shift_L+e
+done
+
+sleep 0.1
+
+skip_left
+
+sleep 0.1
+
+for i in {1..34}
+do
+    xdotool key Control_L+Shift_L+Left
+done
+
+skip_right
+
+for i in {1..12}
+do
+    xdotool key Control_L+Shift_L+Right
+done
+
+xdotool key Alt_L+Left
+for i in {1 2}
+do
+    xdotool key Control_L+Shift_L+o
+done
+
+sleep 0.2
+
+skip_up
+
+
+for i in {1..9}
+do
+    xdotool key Control_L+Shift_L+Up
+done
+
+skip_down
+
+for i in {1..5}
+do
+    xdotool key Control_L+Shift_L+Down
+done
+
+cmatrix_init
+
+xdotool key Alt_L+Left
+cmatrix_init
+
+sleep 0.1
+
+skip_right
+cmatrix_init
+
+sleep 0.1
+
+xdotool key Alt_L+Left
+xdotool key Alt_L+Up
+cmatrix_init
+
+sleep 0.1
+
+xdotool key Alt_L+Down
+xdotool type "tty-clock -c -x -B -S -t"
+xdotool key Return
+
