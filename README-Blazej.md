@@ -40,7 +40,8 @@ TODO
 -   Add reset functionality during runtime
 -   Add ability to stop cppmon and restart it
 -   Implement subprocesses
--   Make code more modular
+-   Make code more modular, extend functios to OOP with external moduls and own libraries.
+-   Make script faster with using subprocesses, work better with cpu and ram
 
 Technologies
 ============
