@@ -2,6 +2,7 @@
 import sys
 
 
+
 def create_cpp(num_of_files, name_of_files):
     command = '#include <iostream>\n\nint main() {\n\tsystem("clear");\n\n\treturn 0;\n}'
 
