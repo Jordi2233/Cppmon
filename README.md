@@ -33,3 +33,17 @@ files_create py 10
 ```
 
 that will create 10 files "Zad1.py Zad2.py ... Zad10.py"
+
+TODO
+====
+
+-   Add reset functionality during runtime
+-   Add ability to stop cppmon and restart it
+-   Implement subprocesses
+-   Make code more modular
+
+Technologies
+============
+-   Python3
+-   OS library
+-   Subprocess library
