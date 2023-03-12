@@ -1,38 +1,86 @@
 #!/usr/bin/env python3
-import os, time, sys
-os.system('clear')
+
+import os
+import sys
+import time
+import subprocess
+import argparse
+import multiprocessing
+import signal
 
 
-def cppmon(file_name):
+def cppmon(files, stop_event):
+    os.system("clear")
+    print("Cppmon started.")
 
-    print(f"{file} is open.\nWaiting for changes!")
-    short_file = ''
+    # Initialize the dictionary of file timestamps and sizes
+    changes = {f: (os.path.getmtime(f), os.path.getsize(f)) for f in files}
 
-    for i in range(len(file)):
-        if file[i] == ".":
-            short_file = file[:i]
+    while not stop_event.is_set():
+        # Sleep for 100ms
+        time.sleep(0.1)
 
-    changes =  {file:os.path.getmtime(file)}
-    while True:
-            time.sleep(0.01)
-            if changes.get(file) < os.path.getmtime(file):
-                res = os.system(f"g++ -o {short_file} {file}")
-                if res == 0:
-                    os.system(f"./{short_file}")
-                changes[file] = os.path.getmtime(file)
+        # Check each file for changes
+        for file in files:
+            mod_time, size = os.path.getmtime(file), os.path.getsize(file)
+            if (mod_time, size) != changes[file]:
+                print(f"{file} has been modified. Recompiling...")
 
+                # Extract the file name without extension
+                short_file = os.path.splitext(file)[0]
 
-file = sys.argv[1]
+                # Compile the file
+                res = subprocess.run(
+                    ["g++", "-o", short_file, file], stderr=subprocess.PIPE)
+                if res.returncode == 0:
+                    print("Compilation successful. Running program...")
+                    subprocess.run([f"./{short_file}"])
+                else:
+                    print("Compilation failed. Errors:")
+                    print(res.stderr.decode())
+
+                # Update the timestamp and size of the file
+                changes[file] = (mod_time, size)
+
 
 def main():
-    cppmon(file)
+    parser = argparse.ArgumentParser(
+        description='Monitor and compile C++ code on save.')
+    parser.add_argument('files', type=str, nargs='+', help='files to monitor')
+    args = parser.parse_args()
+
+    stop_event = multiprocessing.Event()
+
+    monitor_process = multiprocessing.Process(
+        target=cppmon, args=(args.files, stop_event))
+    monitor_process.start()
+
+    while True:
+        command = input(
+            "\nType command ('rs' to restart, 'c' to clear screen, 'q' to quit): ")
+        if command == 'rs':
+            # send interrupt signal to monitor process
+            stop_event.set()
+            monitor_process.join()  # wait for monitor process to terminate
+            stop_event.clear()
+            monitor_process = multiprocessing.Process(
+                target=cppmon, args=(args.files, stop_event))
+            monitor_process.start()
+        elif command == 'c':
+            os.system('clear')
+        elif command == 'q':
+            # send interrupt signal to monitor process
+            stop_event.set()
+            monitor_process.join()  # wait for monitor process to terminate
+            break
+        elif command == 'h':
+            print("rs - restart script and clear screen\n"
+                  "clear - clear screen\n"
+                  "q - quit\n"
+                  "h - help")
+        else:
+            print("Invalid command, please try again.")
+
 
 if __name__ == "__main__":
     main()
-
-# TODO:
-#     1. separate processes
-#     2. Add rs command that restart the script
-#     3. Add q command that exit the script
-#     4. Add help option
-#     5. Add compile timer
