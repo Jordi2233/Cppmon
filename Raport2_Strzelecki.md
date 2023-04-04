@@ -15,6 +15,12 @@ This report summarizes the latest update to the software, including new features
 
 In summary, this update brings significant improvements to the software, including multiprocessing, new command functionality, and bug fixes. These changes should make your experience with the software more enjoyable and efficient. As the only programmer and owner of the product, I welcome any feedback or suggestions for future updates. Thank you for choosing my software.
 
+### To do
+
+- Add Welcome screen
+- Add verify if files exits function
+- Add function to check if file is empty
+
 Updates:
 
 ### Update 19.03
