@@ -10,37 +10,50 @@ import signal
 
 
 def cppmon(files, stop_event):
-    os.system("clear")
-    print("Cppmon started.")
 
     # Initialize the dictionary of file timestamps and sizes
     changes = {f: (os.path.getmtime(f), os.path.getsize(f)) for f in files}
 
-    while not stop_event.is_set():
-        # Sleep for 100ms
-        time.sleep(0.1)
+    try:
+        while not stop_event.is_set():
+            # Sleep for 100ms
+            time.sleep(0.1)
 
-        # Check each file for changes
-        for file in files:
-            mod_time, size = os.path.getmtime(file), os.path.getsize(file)
-            if (mod_time, size) != changes[file]:
-                print(f"{file} has been modified. Recompiling...")
+            # Check each file for changes
+            for file in files:
+                mod_time, size = os.path.getmtime(file), os.path.getsize(file)
+                if (mod_time, size) != changes[file]:
+                    print(f"{file} has been modified. Recompiling...")
 
-                # Extract the file name without extension
-                short_file = os.path.splitext(file)[0]
+                    # Extract the file name without extension
+                    short_file = os.path.splitext(file)[0]
 
-                # Compile the file
-                res = subprocess.run(
-                    ["g++", "-o", short_file, file], stderr=subprocess.PIPE)
-                if res.returncode == 0:
-                    print("Compilation successful. Running program...")
-                    subprocess.run([f"./{short_file}"])
-                else:
-                    print("Compilation failed. Errors:")
-                    print(res.stderr.decode())
+                    # Compile the file
+                    res = subprocess.run(
+                        ["g++", "-o", short_file, file], stderr=subprocess.PIPE)
+                    if res.returncode == 0:
+                        print("Compilation successful. Running program...")
+                        subprocess.run([f"./{short_file}"])
+                    else:
+                        print("Compilation failed. Errors:")
+                        print(res.stderr.decode())
 
-                # Update the timestamp and size of the file
-                changes[file] = (mod_time, size)
+                    # Update the timestamp and size of the file
+                    changes[file] = (mod_time, size)
+    except KeyboardInterrupt:
+        print("\nStopping Cppmon...")
+        sys.exit(0)
+
+
+def welcome_screen(files):
+    os.system("clear")
+    print("Welcome to Cppmon!\n")
+    print("This program monitors the following up to four files for changes and automatically compiles and runs your C++ code:\n")
+    for file in files:
+        print(f" - {file}")
+    print("\nTo use Cppmon, simply save your C++ code files and the program will automatically compile and run them.")
+    print("Press 'rs' to restart the monitoring process, 'c' to clear the screen, 'q' to quit, or 'h' for help.")
+    print("Now monitoring files...\n")
 
 
 def main():
@@ -49,37 +62,60 @@ def main():
     parser.add_argument('files', type=str, nargs='+', help='files to monitor')
     args = parser.parse_args()
 
+    if len(args.files) > 4:
+        print(
+            f"Error: Cppmon can monitor up to 4 files at a time. You provide {len(args.files)} files.")
+        sys.exit(1)
+
+    welcome_screen(args.files)
+
+  # Check if all files exist
+    missing_files = []
+    for file in args.files:
+        if not os.path.isfile(file):
+            missing_files.append(file)
+
+    # If any file does not exist, print the list of missing files and exit
+    if missing_files:
+        print("Error: The following files do not exist:")
+        for file in missing_files:
+            print(f"\t{file}")
+        sys.exit(1)
+
     stop_event = multiprocessing.Event()
 
     monitor_process = multiprocessing.Process(
         target=cppmon, args=(args.files, stop_event))
     monitor_process.start()
 
-    while True:
-        command = input(
-            "\nType command ('rs' to restart, 'c' to clear screen, 'q' to quit): ")
-        if command == 'rs':
-            # send interrupt signal to monitor process
-            stop_event.set()
-            monitor_process.join()  # wait for monitor process to terminate
-            stop_event.clear()
-            monitor_process = multiprocessing.Process(
-                target=cppmon, args=(args.files, stop_event))
-            monitor_process.start()
-        elif command == 'c':
-            os.system('clear')
-        elif command == 'q':
-            # send interrupt signal to monitor process
-            stop_event.set()
-            monitor_process.join()  # wait for monitor process to terminate
+    while not stop_event.is_set():
+        try:
+            command = input(
+                "\nType command ('rs' to restart, 'c' to clear screen, 'q' to quit): ")
+            if command == 'rs':
+                # send interrupt signal to monitor process
+                stop_event.set()
+                monitor_process.join()  # wait for monitor process to terminate
+                stop_event.clear()
+                monitor_process = multiprocessing.Process(
+                    target=cppmon, args=(args.files, stop_event))
+                monitor_process.start()
+            elif command == 'c':
+                os.system('clear')
+            elif command == 'q':
+                # send interrupt signal to monitor process
+                stop_event.set()
+                monitor_process.join()  # wait for monitor process to terminate
+                break
+            elif command == 'h':
+                print("rs - restart script and clear screen\n"
+                      "clear - clear screen\n"
+                      "q - quit\n"
+                      "h - help")
+            else:
+                print("Invalid command, please try again.")
+        except KeyboardInterrupt:
             break
-        elif command == 'h':
-            print("rs - restart script and clear screen\n"
-                  "clear - clear screen\n"
-                  "q - quit\n"
-                  "h - help")
-        else:
-            print("Invalid command, please try again.")
 
 
 if __name__ == "__main__":
