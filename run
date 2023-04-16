@@ -15,12 +15,12 @@ function test_loop() {
         sleep 1; sed -i '5 i\std::cout << "Test 1" << std::endl;' test/"$FILES_NAME""$i".cpp
     done
     
-    i=2
-    while [[ ! $i -eq 5 ]]; do
-        sed -i "s/Test [0-9]*/Test $i/" test/"$FILES_NAME"*.cpp
-        sleep 5
-        (( i++ ))
-    done
+    # i=2
+    # while [[ ! $i -eq 5 ]]; do
+    #     sed -i "s/Test [0-9]*/Test $i/" test/"$FILES_NAME"*.cpp
+    #     sleep 5
+    #     (( i++ ))
+    # done
     
     rm -r test
 }
