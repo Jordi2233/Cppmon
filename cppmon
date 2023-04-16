@@ -15,10 +15,15 @@ def cppmon(files, stop_event):
     """
 
     # Initialize the dictionary of file timestamps and sizes
-    changes = {f: (os.path.getmtime(f), os.path.getsize(f)) for f in files}
-
     try:
-        while not stop_event.is_set():
+        check_files_exist(files)
+        changes = {f: (os.path.getmtime(f), os.path.getsize(f)) for f in files}
+    except FileNotFoundError:
+        sys.exit(1)
+
+    while not stop_event.is_set():
+        try:
+            check_files_exist(files)
             # Sleep for 100ms
             time.sleep(0.1)
 
@@ -26,7 +31,7 @@ def cppmon(files, stop_event):
             for file in files:
                 mod_time, size = os.path.getmtime(file), os.path.getsize(file)
                 if (mod_time, size) != changes[file]:
-                    print(f"{file} has been modified. Recompiling...")
+                    print(f"\n<== {file} ==>\nHas been modified. Recompiling...")
 
                     # Extract the file name without extension
                     short_file = os.path.splitext(file)[0]
@@ -35,7 +40,7 @@ def cppmon(files, stop_event):
                     res = subprocess.run(
                         ["g++", "-o", short_file, file], stderr=subprocess.PIPE)
                     if res.returncode == 0:
-                        print("Compilation successful. Running program...")
+                        print("Compilation successful. Running program:")
                         subprocess.run([f"./{short_file}"])
                     else:
                         print("Compilation failed. Errors:")
@@ -43,9 +48,13 @@ def cppmon(files, stop_event):
 
                     # Update the timestamp and size of the file
                     changes[file] = (mod_time, size)
-    except KeyboardInterrupt:
-        print("\nStopping Cppmon...")
-        sys.exit(0)
+
+        except KeyboardInterrupt:
+            print("\nStopping Cppmon...")
+            break
+        except FileNotFoundError:
+            print("\nFile not found. Restart Cppmon...")
+            break
 
 
 def welcome_screen(files):
@@ -63,6 +72,24 @@ def welcome_screen(files):
     print("Now monitoring files...\n")
 
 
+def check_files_exist(files):
+    """Check if all files in a list exist"""
+    missing_files = []
+    for file in files:
+        if not os.path.isfile(file):
+            missing_files.append(file)
+
+    # If any file does not exist, print the list of missing files and raise an exception
+    if missing_files:
+        print("\nError: The following files do not exist:")
+        for file in missing_files:
+            print(f"\t{file}")
+        raise FileNotFoundError()
+
+    # All files exist, return True
+    return True
+
+
 def main():
     parser = argparse.ArgumentParser(
         description='Monitor and compile C++ code on save.')
@@ -77,17 +104,9 @@ def main():
 
     welcome_screen(args.files)
 
-    # Check if all files exist
-    missing_files = []
-    for file in args.files:
-        if not os.path.isfile(file):
-            missing_files.append(file)
-
-    # If any file does not exist, print the list of missing files and exit
-    if missing_files:
-        print("Error: The following files do not exist:")
-        for file in missing_files:
-            print(f"\t{file}")
+    try:
+        check_files_exist(args.files)
+    except FileNotFoundError:
         sys.exit(1)
 
     stop_event = multiprocessing.Event()
@@ -99,12 +118,13 @@ def main():
     while not stop_event.is_set():
         try:
             command = input(
-                "\nType command ('rs' to restart, 'c' to clear screen, 'q' to quit): ")
+                "\nType command ('rs' to restart, 'c' to clear screen, 'q' to quit): \n")
             if command == 'rs':
                 # send interrupt signal to monitor process
                 stop_event.set()
                 monitor_process.join()  # wait for monitor process to terminate
                 stop_event.clear()
+                os.system('clear')
                 monitor_process = multiprocessing.Process(
                     target=cppmon, args=(args.files, stop_event))
                 monitor_process.start()

@@ -4,7 +4,7 @@ import sys
 
 
 def create_cpp(num_of_files, name_of_files):
-    command = '#include <iostream>\n\nint main() {\n\tsystem("clear");\n\n\treturn 0;\n}'
+    command = '#include <iostream>\n\nint main() {\n\n\treturn 0;\n}'
 
     for num_of_files in range(num_of_files):
         with open(f"{name_of_files}{num_of_files+1}.cpp", "w") as f:
