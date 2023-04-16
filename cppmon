@@ -6,10 +6,13 @@ import time
 import subprocess
 import argparse
 import multiprocessing
-import signal
 
 
 def cppmon(files, stop_event):
+    """
+    This function monitors the specified files for changes and automatically compiles and runs the C++ code
+    if a change is detected.
+    """
 
     # Initialize the dictionary of file timestamps and sizes
     changes = {f: (os.path.getmtime(f), os.path.getsize(f)) for f in files}
@@ -46,6 +49,10 @@ def cppmon(files, stop_event):
 
 
 def welcome_screen(files):
+    """
+    This function displays the welcome screen and the list of files being monitored.
+    """
+
     os.system("clear")
     print("Welcome to Cppmon!\n")
     print("This program monitors the following up to four files for changes and automatically compiles and runs your C++ code:\n")
@@ -62,14 +69,15 @@ def main():
     parser.add_argument('files', type=str, nargs='+', help='files to monitor')
     args = parser.parse_args()
 
+    # Check if too many files were provided
     if len(args.files) > 4:
         print(
-            f"Error: Cppmon can monitor up to 4 files at a time. You provide {len(args.files)} files.")
+            f"Error: Cppmon can monitor up to 4 files at a time. You provided {len(args.files)} files.")
         sys.exit(1)
 
     welcome_screen(args.files)
 
-  # Check if all files exist
+    # Check if all files exist
     missing_files = []
     for file in args.files:
         if not os.path.isfile(file):
