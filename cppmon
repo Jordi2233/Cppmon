@@ -31,7 +31,8 @@ def cppmon(files, stop_event):
             for file in files:
                 mod_time, size = os.path.getmtime(file), os.path.getsize(file)
                 if (mod_time, size) != changes[file]:
-                    print(f"\n<== {file} ==>\nHas been modified. Recompiling...")
+                    print(
+                        f"\n<== {file} ==>\nHas been modified. Recompiling...")
 
                     # Extract the file name without extension
                     short_file = os.path.splitext(file)[0]
@@ -67,21 +68,22 @@ def welcome_screen(files):
     print("This program monitors the following up to four files for changes and automatically compiles and runs your C++ code:\n")
     for file in files:
         print(f" - {file}")
-    print("\nTo use Cppmon, simply save your C++ code files and the program will automatically compile and run them.")
-    print("Press 'rs' to restart the monitoring process, 'c' to clear the screen, 'q' to quit, or 'h' for help.")
     print("Now monitoring files...\n")
 
 
 def check_files_exist(files):
-    """Check if all files in a list exist"""
+    """Check if all files in a list exist and is not empty and is cpp file"""
+
     missing_files = []
     for file in files:
-        if not os.path.isfile(file):
+        if not os.path.isfile(file) or os.path.splitext(file)[1] != ".cpp":
+            missing_files.append(file)
+        elif os.path.getsize(file) == 0:
             missing_files.append(file)
 
     # If any file does not exist, print the list of missing files and raise an exception
     if missing_files:
-        print("\nError: The following files do not exist:")
+        print("\nError: The following files do not exist or they are not cpp files:")
         for file in missing_files:
             print(f"\t{file}")
         raise FileNotFoundError()
@@ -97,9 +99,9 @@ def main():
     args = parser.parse_args()
 
     # Check if too many files were provided
-    if len(args.files) > 4:
+    if len(args.files) > 10:
         print(
-            f"Error: Cppmon can monitor up to 4 files at a time. You provided {len(args.files)} files.")
+            f"Error: Cppmon can monitor up to 10 files at a time. You provided {len(args.files)} files.")
         sys.exit(1)
 
     welcome_screen(args.files)
@@ -118,7 +120,7 @@ def main():
     while not stop_event.is_set():
         try:
             command = input(
-                "\nType command ('rs' to restart, 'c' to clear screen, 'q' to quit): \n")
+                "\nType command ('rs' to restart, 'c' to clear screen, 'q' to quit, 'h' for help):")
             if command == 'rs':
                 # send interrupt signal to monitor process
                 stop_event.set()
@@ -136,6 +138,8 @@ def main():
                 monitor_process.join()  # wait for monitor process to terminate
                 break
             elif command == 'h':
+                print(
+                    "\nTo use Cppmon, simply save your C++ code files and the program will automatically compile and run them.")
                 print("rs - restart script and clear screen\n"
                       "clear - clear screen\n"
                       "q - quit\n"
