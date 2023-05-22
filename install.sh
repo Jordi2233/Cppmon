@@ -17,8 +17,7 @@ install_global() {
     cp -r "${cppmon_path}" ~/bin/cppmon
     chmod +x ~/bin/cppmon
 
-    pip install -r requirements.tx
-
+    pip install -r requirements.txt
 
     echo "Adding ~/bin to PATH in .bashrc and .zshrc (if they exist)"
     [ -f ~/.bashrc ] && echo "export PATH=\"\$HOME/bin:\$PATH\"" >> ~/.bashrc
