@@ -1,52 +1,39 @@
-# Linux_Commands
+# Cppmon: C++ Auto-compile and Run Monitor
 
-Custom commands for linux
-The first is files_create, which allows you to choose between Python and C ++ files for authoring. The first parameter is the file type (py or cpp), the second is the number of files.
+Cppmon is a Python script that automatically monitors specified C++ source files for changes. Upon detecting a modification, it compiles and runs the updated code automatically. 
 
-The second is cppmon, which allows you to run a script in the background that waits for C ++ files to change and automatically compiles and runs it in the console. Takes one parameter that is the full file name.
+## How it works
+
+Cppmon constantly monitors the last modified time and size of the provided C++ files. If a change is detected, it executes a shell command to compile the C++ file using g++. If the compilation is successful, it will run the compiled program.
+
+The script also provides a simple console interface to manage the files being monitored and control the operation of the script.
 
 ## Installation
 
 ``` bash
-mkdir ~/bin
-cd Downloads
-git clone https://github.com/Jordi2233/Linux_Commands.git
-cd Linux_Commands/
-cp -r * ~/bin/
-cp ~/.bash_profile ~/.bash_profile.copy
-echo 'export PATH=$PATH":$HOME/bin"' >> ~/.bash_profile
-source ~/.bash_profile
+git clone https://github.com/Jordi2233/cppmon.git
+cd cppmon
+chmod +x install.sh
+./install.h
 ```
 
 ### Cppmon usage
 
 ``` bash
-cppmon filename.cpp
+cppmon [file1, file2, ...]
 ```
 
-that will start waiting for changes on filename.cpp file
+Here, file1.cpp and file2.cpp are the C++ files you want to monitor. You can provide up to 10 files to monitor at the same time.
 
-### files_create usage
+Once the script is running, it provides an interactive command-line interface with the following options:
 
-``` bash
-files_create py 10
-```
+* rs : Restart the script and clear the screen.
+* c : Clear the screen.
+* q : Quit the script.
+* h : Display the help menu.
+* lf : List the files currently being monitored.
+* af : Add a file to the monitoring list. Follow this command with the name of the file you want to add. For example, af file3.cpp.
+* rf : Remove a file from the monitoring list. Follow this command with the name of the file you want to remove. For example, rf file1.cpp.
 
-that will create 10 files "Zad1.py Zad2.py ... Zad10.py"
-
-TODO
-====
-
--   Add reset functionality during runtime
--   Add ability to stop cppmon and restart it
--   Implement subprocesses
--   Make code more modular, extend functios to OOP with external moduls and own libraries.
--   Make script faster with using subprocesses, work better with cpu and ram
-
-Technologies
-============
--   Python3
--   OS library
--   Subprocess library
-
-https://github.com/Jordi2233/Linux_Commands.git
+## Credits
+- [Jordi2233](https://github.com/Jordi2233)
