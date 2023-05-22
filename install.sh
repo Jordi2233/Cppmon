@@ -15,6 +15,7 @@ install_global() {
     fi
 
     cp -r "${cppmon_path}" ~/bin/cppmon
+    chmod +x ~/bin/cppmon
 
     pip install -r requirements.tx
 
