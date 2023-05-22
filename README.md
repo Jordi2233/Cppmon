@@ -14,13 +14,23 @@ The script also provides a simple console interface to manage the files being mo
 git clone https://github.com/Jordi2233/cppmon.git
 cd cppmon
 chmod +x install.sh
-./install.h
+./install.h [--install-global, install-local]
 ```
+* --install-global - it will install cppmon globaly taht mean it will work as linux command
+* --install-local it will create python venv and install cppmon localy
 
 ### Cppmon usage
 
+####Global
+
 ``` bash
 cppmon [file1, file2, ...]
+```
+
+####Local
+``` bash
+source venv/bin/activate
+./cppmon [file1, file2, ...]
 ```
 
 Here, file1.cpp and file2.cpp are the C++ files you want to monitor. You can provide up to 10 files to monitor at the same time.
