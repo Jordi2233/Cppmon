@@ -38,6 +38,8 @@ install_local() {
 
     echo "Installing python packages in virtual environment"
     pip install -r requirements.txt
+
+    echo "Please run 'source venv/bin/activate"
 }
 
 # Check the command line argument
