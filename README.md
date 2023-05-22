@@ -14,7 +14,7 @@ The script also provides a simple console interface to manage the files being mo
 git clone https://github.com/Jordi2233/cppmon.git
 cd cppmon
 chmod +x install.sh
-./install.h [--install-global, install-local]
+./install.sh [--install-global, install-local]
 ```
 * --install-global - it will install cppmon globaly taht mean it will work as linux command
 * --install-local it will create python venv and install cppmon localy
