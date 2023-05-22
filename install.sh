@@ -34,7 +34,7 @@ install_local() {
     python3 -m venv venv
 
     echo "Activating virtual environment"
-    export source venv/bin/activate
+    source venv/bin/activate
 
     echo "Installing python packages in virtual environment"
     pip install -r requirements.txt
