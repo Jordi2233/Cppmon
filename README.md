@@ -19,15 +19,15 @@ chmod +x install.sh
 * --install-global - it will install cppmon globaly taht mean it will work as linux command
 * --install-local it will create python venv and install cppmon localy
 
-### Cppmon usage
+## Cppmon usage
 
-####Global
+###Global
 
 ``` bash
 cppmon [file1, file2, ...]
 ```
 
-####Local
+###Local
 ``` bash
 source venv/bin/activate
 ./cppmon [file1, file2, ...]
