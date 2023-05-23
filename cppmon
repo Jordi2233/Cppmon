@@ -9,17 +9,27 @@ import multiprocessing
 from termcolor import colored
 
 
+def log(message):
+    """
+    This function writes a message to the log file.
+    """
+    with open("cppmon_log.txt", "a") as log_file:
+        log_file.write(f"{time.ctime()}: {message}\n")
+
+
 def cppmon(files, stop_event):
     """
     This function monitors the specified files for changes and automatically compiles and runs the C++ code
     if a change is detected.
     """
+    log("Cppmon started.")
 
     # Initialize the dictionary of file timestamps and sizes
     try:
         check_files_exist(files)
         changes = {f: (os.path.getmtime(f), os.path.getsize(f)) for f in files}
     except FileNotFoundError:
+        log("Cppmon started.")
         sys.exit(1)
 
     while not stop_event.is_set():
@@ -52,13 +62,13 @@ def cppmon(files, stop_event):
         except FileNotFoundError:
             print("\nFile not found. Restart Cppmon...")
             break
+        log("Cppmon stopped.")
 
 
 def welcome_screen(files):
     """
     This function displays the welcome screen and the list of files being monitored.
     """
-
     os.system("clear")
     print(colored("Welcome to Cppmon!\n", "yellow"))
     print("This program monitors the following up to ten files for changes and automatically compiles and runs your C++ code:\n")
@@ -82,12 +92,16 @@ def check_files_exist(files):
             "\nError: The following files do not exist or they are not cpp files:", "red"))
         for file in missing_files:
             print(colored(f"\t{file}", "red"))
+        log("Error: Invalid files detected.")
         raise FileNotFoundError()
 
+    log("All files exist and are valid.")
     return True
 
 
 def main():
+
+    log("All files exist and are valid.")
     parser = argparse.ArgumentParser(
         description='Monitor and compile C++ code on save.')
     parser.add_argument('files', type=str, nargs='+', help='files to monitor')
@@ -96,6 +110,7 @@ def main():
     if len(args.files) > 10:
         print(colored(
             f"Error: Cppmon can monitor up to 10 files at a time. You provided {len(args.files)} files.", "red"))
+        log("Error: Too many files provided.")
         sys.exit(1)
 
     welcome_screen(args.files)
@@ -103,6 +118,7 @@ def main():
     try:
         check_files_exist(args.files)
     except FileNotFoundError:
+        log("File not found error occurred.")
         sys.exit(1)
 
     stop_event = multiprocessing.Event()
@@ -110,6 +126,7 @@ def main():
     monitor_process = multiprocessing.Process(
         target=cppmon, args=(args.files, stop_event))
     monitor_process.start()
+    log("Monitoring process started.")
 
     while not stop_event.is_set():
         try:
@@ -120,12 +137,15 @@ def main():
                 monitor_process.join()
                 stop_event.clear()
                 os.system('clear')
+                log("Cppmon restarted.")
                 monitor_process = multiprocessing.Process(
                     target=cppmon, args=(args.files, stop_event))
                 monitor_process.start()
             elif command == 'c':
                 os.system('clear')
+                log("Screen cleared.")
             elif command == 'q':
+                log("Cppmon stopped.")
                 stop_event.set()
                 monitor_process.join()
                 break
@@ -144,6 +164,7 @@ def main():
                 print(colored("\nList of monitored files:", "yellow"))
                 for file in args.files:
                     print(colored(f" - {file}", "blue"))
+                    log("List of files displayed.")
             elif command.startswith('af '):
                 new_file = command.split(' ')[1]
                 if new_file not in args.files and os.path.isfile(new_file) and os.path.splitext(new_file)[1] == ".cpp":
@@ -153,6 +174,7 @@ def main():
                 else:
                     print(colored(
                         "File does not exist, is not a cpp file, or is already being monitored.", "red"))
+                log(f"File {new_file} added to monitoring list.")
             elif command.startswith('rf '):
                 remove_file = command.split(' ')[1]
                 if remove_file in args.files:
@@ -161,10 +183,12 @@ def main():
                         colored(f"Removed {remove_file} from monitoring list.", "green"))
                 else:
                     print(colored("File is not in the monitoring list.", "red"))
+                log(f"File {remove_file} removed from monitoring list.")
             else:
                 print(colored("Invalid command, please try again.", "red"))
         except KeyboardInterrupt:
             break
+        log("Main function ended.")
 
 
 if __name__ == "__main__":
